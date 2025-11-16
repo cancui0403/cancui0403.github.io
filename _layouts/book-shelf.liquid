@@ -15,12 +15,12 @@ layout: page
         <h1 id="y{{item.date | date: "%Y"}}">
           <a href="{{ current_year | prepend: '/books/' | relative_url }}">{{ current_year }}</a>
         </h1>
-        <ul>
+        <ul style="display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 20px; list-style: none; padding: 0;">
           {% assign year = current_year %}
       {% endif %}
 
       <figure class="cover">
-        <a class="cover-link" href="{{ item.url | relative_url }}">
+        {%- comment -%}<a class="cover-link" href="{{ item.url | relative_url }}">{%- endcomment -%}
           {% if item.cover %}
             <img alt="{{ item.title }} cover" src="{{ item.cover | prepend: page.covers | relative_url }}" style="height:200px">
           {% elsif item.olid %}
@@ -28,6 +28,8 @@ layout: page
           {% elsif item.isbn %}
             <img alt="{{ item.title }} cover" src="http://covers.openlibrary.org/b/isbn/{{ item.isbn }}-L.jpg?default=false" style="height:200px">
           {% endif %}
+
+          {%- comment -%}
           {% if item.status %}
             {% assign statuses = 'abandoned,finished,interested,paused,queued,reading,reread' | split: ',' %}
             {% assign status = item.status | downcase | strip %}
@@ -39,7 +41,14 @@ layout: page
           {% else %}
             <figcaption class="uncategorized">UNCATEGORIZED</figcaption>
           {% endif %}
-        </a>
+          {%- endcomment -%}
+        {%- comment -%}</a>{%- endcomment -%}
+
+        <figcaption class="book-info">
+          <strong>{{ item.title }}</strong><br>
+          <em>{{ item.author }}</em>
+        </figcaption>
+
       </figure>
       {% if forloop.last %}
         </ul>
