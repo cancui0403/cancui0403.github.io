@@ -22,58 +22,39 @@
       }
     ]
   },
-  "work": [
-    {
-      "name": "Rollins School of Public Health, Emory University",
-      "position": "Student Intern",
-      "url": "https://example.com",
-      "startDate": "2025-08-15",
-      "endDate": "2025-10-19",
-      "summary": "",
-      "highlights": ["Statistical Genomics",
-    "Transcriptome-wide association study"]
-    },
-    {
-      "name": "Rollins School of Public Health, Emory University",
-      "position": "Research Assistant (remote)",
-      "url": "https://example.com",
-      "startDate": "2025-03-04",
-      "endDate": "2025-08-15",
-      "summary": "Teaching at Palmer Physical Laboratory (now 302 Frist Campus Center). While not a professor at Princeton, I associated with the physics professors and continued to give lectures on campus.",
-      "highlights": ["Relativity"]
-    },
-    {
-      "name": "School of Mathematics, Sun Yat-sen University",
-      "position": "Research Assistant",
-      "url": "https://example.com",
-      "startDate": "2024-08-01",
-      "endDate": "2025-06-30",
-      "summary": "Conducting research on Bayesian modeling under the supervision of Prof. Kai Kang. Our aim is to develop a novel joint model capable of simultaneously analyzing network data and biomarker data.",
-      "highlights": ["Statistical Genomics",
-    "Transcriptome-wide association study"]
-    }
-  ],
   "experience": [
     {
       "name": "Rollins School of Public Health, Emory University",
       "position": "Student Intern",
-      "url": "https://example.com",
+      "url": "https://sph.emory.edu/",
       "startDate": "2025-08-15",
       "endDate": "2025-10-19",
-      "summary": "Teaching at Palmer Physical Laboratory (now 302 Frist Campus Center). While not a professor at Princeton, I associated with the physics professors and continued to give lectures on campus.",
-      "highlights": ["Statistical Genomics",
-    "Transcriptome-wide association study"]
+      "summary": "",
+      "highlights": ["Statistical Genetics and Genomics",
+    "Transcriptome-Wide Association Studies"]
     },
     {
       "name": "Rollins School of Public Health, Emory University",
       "position": "Research Assistant (remote)",
-      "url": "https://example.com",
+      "url": "https://sph.emory.edu/",
       "startDate": "2025-03-04",
       "endDate": "2025-08-15",
-      "summary": "Teaching at Palmer Physical Laboratory (now 302 Frist Campus Center). While not a professor at Princeton, I associated with the physics professors and continued to give lectures on campus.",
-      "highlights": ["Relativity"]
+      "summary": "",
+      "highlights": ["Statistical Genetics and Genomics",
+    "Transcriptome-Wide Association Studies"]
+    },
+    {
+      "name": "School of Mathematics, Sun Yat-sen University",
+      "position": "Research Assistant",
+      "url": "https://math.sysu.edu.cn/",
+      "startDate": "2024-08-01",
+      "endDate": "2025-06-30",
+      "summary": "Conducting research on Bayesian modeling under the supervision of Prof. Kai Kang. Our aim is to develop a novel joint model capable of simultaneously analyzing network data and biomarker data.",
+      "highlights": ["Network Modeling",
+    "Bayesian Methods"]
     }
   ],
+  
   "volunteer1": [
     {
       "organization": "People's Climate March",
@@ -92,10 +73,10 @@
       "location": "Guangzhou, China",
       "url": "https://www.sysu.edu.cn/sysuen/",
       "area": "Statistics",
-      "studyType": "B.Sc",
+      "studyType": "B.S.",
       "startDate": "2022-09",
-      "endDate": "",
-      "score": "4.0/4.0",
+      "endDate": "2026-",
+      "score": "3.99/4.00",
       "courses": ["Mathematical Analysis I, II, III", "Geometry and Algebra I, II", "Functions of Real Variables", 
       "Probabilities", "Mathematical Statistics", "Stochastic Process"]
     }
@@ -205,15 +186,12 @@
   ],
   "interests": [
     {
-      "name": "Physics",
-      "icon": "fa-solid fa-tag",
+      "name": "Biostatistics",
+      "icon": "fa-solid fa-dna",
       "keywords": [
-        "Quantum Mechanics",
-        "Quantum Computing",
-        "Quantum Information",
-        "Quantum Cryptography",
-        "Quantum Communication",
-        "Quantum Teleportation"
+        "Statistical Genetics and Genomics",
+        "Network Analysis",
+        "Bayesian Methods"
       ]
     }
   ],
@@ -231,12 +209,29 @@
   ],
   "projects": [
     {
-      "name": "Quantum Computing",
-      "summary": "Quantum computing is the use of quantum-mechanical phenomena such as superposition and entanglement to perform computation. Computers that perform quantum computations are known as quantum computers.",
-      "highlights": ["Quantum Teleportation", "Quantum Cryptography"],
-      "startDate": "2018-01-01",
-      "endDate": "2018-01-01",
-      "url": "https://example.com"
+    "name": "tggl: Tree-Guided Group Lasso (R Package)",
+    "summary": "Implemented an R package that fits multi-task regression models with a tree-guided group lasso penalty and supports cross-validated hyperparameter tuning on high-dimensional data.",
+    "highlights": [
+    "Tree-Guided Group Lasso",
+    "BCD Algorithm",
+    "Parallel Computing Support"
+    ],
+    "startDate": "Jun. 2025",
+    "endDate": "",
+    "url": "https://github.com/cancui0403/tggl"
+    
+    },
+
+    {
+    "name": "Alignment Techniques in Latent Space Models",
+    "summary": "Explored identifiability issues in latent space models and developed a two-stage Procrustes alignment strategy to stabilize MCMC sampling and parameter estimation.",
+    "highlights": [
+    "Identifiably",
+    "Procrustes Alignment"
+    ],
+    "startDate": "2025-01-01",
+    "endDate": "2025-01-01",
+    "url": ""
     }
   ]
 }
