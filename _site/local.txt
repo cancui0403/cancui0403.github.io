@@ -1,0 +1,2 @@
+cd "D:\HuaweiMoveData\Users\cuican\Documents\GitHub\cancui0403.github.io"
+bundle exec jekyll serve
