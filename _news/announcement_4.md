@@ -6,4 +6,6 @@ inline: false
 related_posts: false
 
 ---
-![Poster for my single-cell TWAS talk](/assets/img/poster.png)
+
+
+![Poster for my single-cell TWAS talk!](/assets/img/poster.png)
