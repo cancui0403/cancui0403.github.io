@@ -25,5 +25,5 @@ latest_posts:
   limit: 3 # leave blank to include all the blog posts
 ---
 
-Hi there! 👋 I’m **Can Cui**, an undergraduate student majoring in Statistics at Sun Yat-sen University. I have been conducting research under the supervision of Prof. Kai Kang since my junior year. This summer, I’m spending a wonderful time as a student intern at Emory University, where I joined Prof Chang Su's lab to work on a research project in Statistical Genetics and Genomics.
+Hi there! 👋 I’m **Can Cui**, an undergraduate student majoring in Statistics at Sun Yat-sen University. I have been conducting research under the supervision of Prof. Kai Kang since my junior year. This summer, I’m spending a wonderful time as a student intern at Emory University, where I joined Prof Chang Su's lab to work on a research project in statistical genetics and genomics.
 
