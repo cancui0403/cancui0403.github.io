@@ -1,325 +1,142 @@
 ---
 layout: post
-title: An Alignment Strategy for Latent Space Model
+title: "Alignment Strategies in Latent Space Models: Theory and Algorithms"
 date: 2025-04-19 16:11:00-0400
 inline: false
 related_posts: false
 ---
 
-> **TL;DR.**  
-> Distance-based latent position models are invariant to Euclidean isometries, so each subject’s latent coordinates are only identified up to rotations, reflections, and translations. In MCMC this shows up as slow, drifting chains and incoherent cross-subject summaries.  
->  
-> This note describes a **two-stage Procrustes alignment** that:
-> 1. Stabilizes each subject’s chain by “pinning” it to a fixed orientation, and  
-> 2. Puts all subjects into one common coordinate frame via a single global orthogonal map (or a generalized Procrustes consensus).
+> **Abstract**
+> Distance-based latent space models possess an inherent invariance to Euclidean isometries (rotations, reflections, translations). This invariance manifests as **non-identifiability** in statistical inference.
+>
+> Practically, this leads to two major issues: (1) **Within-subject instability**, where MCMC chains drift along equivalence orbits, making convergence diagnosis difficult; and (2) **Between-subject incoherence**, where coordinate systems lack a common basis, rendering cross-subject statistics (e.g., group means) invalid.
+>
+> This note details a **Two-Stage Procrustes Alignment Strategy**. Grounded in the assumption of an "Approximate Shared Shape," this method maps all posterior samples into a common coordinate frame via orthogonal transformations. Crucially, this restores comparability without altering the likelihood or the intrinsic geometry of the data.
 
 ---
 
-## 1. Background: Latent Space + Distance-Based Likelihood
+## 1. The Geometric Problem: Isometric Invariance
 
-We index **subjects** by $i = 1,\dots,p$ and **nodes** by $k,\ell \in \{1,\dots,n\}$.
+### 1.1 Model Setup
+Consider $p$ subjects, indexed by $i$. For each subject, we model the observed data (e.g., an adjacency matrix $A_i$) using latent coordinates $X_i \in \mathbb{R}^{n \times r}$ for $n$ nodes in an $r$-dimensional Euclidean space.
 
-For subject $i$:
-
-- Latent coordinates:  
-  $$
-  X_i = [X_{i1},\dots,X_{in}] \in \mathbb{R}^{r \times n},
-  $$
-- Pairwise Euclidean distances:  
-  $$
-  d_{ik\ell} = \| X_{ik} - X_{i\ell} \|_2,
-  $$
-- Observed (symmetrized) edge indicator:  
-  $$
-  v_{ik\ell} \in \{0,1\}.
-  $$
-
-A simple example is the **logistic distance model**:
+In distance-based models, the likelihood function $L(X_i; A_i)$ depends solely on the pairwise Euclidean distances between rows:
 $$
-\Pr(v_{ik\ell} = 1 \mid X_i,\alpha)
-= \frac{\exp(\eta_{ik\ell})}{1+\exp(\eta_{ik\ell})},\qquad
-\eta_{ik\ell} = \alpha_k + \alpha_\ell - d_{ik\ell},
-$$
-with node-specific intercepts $\{\alpha_k\}$ (assumed subject-invariant here for simplicity).
-
-The key structural property:
-
-> **Distance-based likelihood.**  
-> The likelihood depends on $X_i$ **only** through the set of pairwise distances  
-> $\{d_{ik\ell}\}_{k,\ell}$.  
->  
-> Everything in this note applies to any model of that form, not just the logistic example.
-
----
-
-## 2. Shapes, Isometries, and Nonidentifiability
-
-### 2.1 Configuration vs. Shape
-
-A configuration is a matrix $X \in \mathbb{R}^{r \times n}$. We act on it by Euclidean isometries:
-
-- Orthogonal transforms $R \in \mathcal{O}(r)$ (rotations / reflections),
-- Translations $t \in \mathbb{R}^r$.
-
-An isometry acts as:
-$$
-X \mapsto RX + t\mathbf{1}_n^{\top}.
+d_{jk}(X_i) = \| X_{i,j} - X_{i,k} \|_2
 $$
 
-Two configurations $X, X'$ are **equivalent** if one can be obtained from the other by such an isometry. The **shape** of $X$ is the equivalence class $[X]$ under this relation. Equivalently:
-
-> **Shape = distance matrix.**  
-> The shape of $X$ is completely determined by the squared distance matrix  
-> $D(X) = (d_{k\ell}^2)_{k,\ell}$.
-
-### 2.2 Likelihood invariance
-
-Because distances are invariant under isometries:
-
-- If $X_i' = R X_i + t\mathbf{1}_n^{\top}$, then $d_{ik\ell}' = d_{ik\ell}$ for all $k,\ell$,
-- Hence **any** distance-based likelihood satisfies:
-  $$
-  L(X_i) = L(R X_i + t\mathbf{1}_n^{\top}).
-  $$
-
-So each subject’s latent coordinates $X_i$ are **only identified up to isometries**: the posterior is supported on an entire orbit of geometrically equivalent configurations.
-
----
-
-## 3. A Mild Cross-Subject Structure: Approximate Shared Shape
-
-Instead of putting a parametric mean model on the coordinates, we assume only that subjects share an approximate **common shape** up to isometries and small perturbations.
-
-> **Assumption (Approximate shared shape).**  
-> There exists a template configuration $T \in \mathbb{R}^{r \times n}$ and, for each subject $i$, an isometry $(O_i, b_i)$ with $O_i \in \mathcal{O}(r), b_i \in \mathbb{R}^r$ such that
-> $$
-> X_i = O_i T + b_i \mathbf{1}_n^{\top} + E_i, \qquad \|E_i\|_F \ \text{small}.
-> $$
-> 
-> Geometrically: all subjects live near the same orbit of $T$ under Euclidean isometries.
-
-No parametric structure on $T$ is imposed; all we use is this **“same shape up to isometry”** assumption.
-
----
-
-## 4. What Goes Wrong Without Alignment?
-
-Because the likelihood is isometry-invariant, the posterior is also invariant. This leads to two practical problems.
-
-### (a) Within-subject MCMC drift
-
-Even for a single subject $i$:
-
-- The posterior over $X_i$ is flat along orbits of rotations, reflections, and translations.
-- An ergodic sampler is free to **wander around this orbit**.
-
-Consequences:
-
-1. Monte Carlo averages of non–isometry-invariant functionals  
-   (raw coordinates, axis-specific loadings, etc.) become **unstable** and can be heavily attenuated.
-2. Credible regions inflate and visualizations blur, because successive draws come in misaligned orientations.
-3. Node-level summaries that implicitly assume a fixed global frame (e.g., coordinate-wise means) become **non-informative**.
-
-### (b) Across-subject incoherence
-
-Across subjects, each $X_i$ may be realized under its own isometry $(O_i, b_i)$. Then:
-
-- Raw coordinates from different subjects are **not directly comparable**.
-- Cross-subject estimators that pool unaligned coordinates (group means, covariance, regressions on $X_i$, etc.) suffer from extra **orientation noise**.
-- This can introduce bias (e.g., shrinkage toward symmetric configurations) and inflate variance.
-- Group-level clustering or template estimation can average incompatible geometries and **fail to recover any meaningful shared structure**.
-
-**Moral:** if we care about comparing latent positions across subjects, we must explicitly **remove subject-specific isometries** before summarizing or visualizing.
-
----
-
-## 5. Two-Stage Procrustes Alignment
-
-We now describe a concrete two-stage alignment pipeline.
-
-Let $X_i^{(t)}$ denote MCMC draws for subject $i$ at iteration $t$.
-
-### 5.1 Stage I: Per-Subject Baselines + Procrustes to a Reference
-
-1. **Compute a short baseline average** for each subject:
-   $$
-   X_{0i} = \frac{1}{m}\sum_{t=T-m+1}^T X_i^{(t)}.
-   $$
-
-2. **Center** each baseline to remove translations:
-   $$
-   \bar x_{0i} = \frac{1}{n}X_{0i}\mathbf{1}_n,\qquad
-   X_{0i} \leftarrow X_{0i} - \bar x_{0i} \mathbf{1}_n^{\top}.
-   $$
-
-3. **Pick a reference subject**, say $i=1$.
-
-4. For each $i = 2,\dots,p$, solve the **orthogonal Procrustes problem**:
-   $$
-   R_i^\star = \arg\min_{R \in \mathcal{O}(r)} \|X_{01} - R X_{0i}\|_F,
-   \qquad
-   \widetilde X_{0i} = R_i^\star X_{0i},\quad \widetilde X_{01} = X_{01}.
-   $$
-
-The solution has the usual SVD form:
-
-> **Orthogonal Procrustes solution.**  
-> Let
-> $$
-> X_{01} X_{0i}^{\top} = U \operatorname{diag}(\sigma) V^{\top}
-> $$
-> be the SVD. Then the minimizer is
-> $$
-> R_i^\star = U V^{\top}.
-> $$
-
-After Stage I, all subject baselines $\{\widetilde X_{0i}\}$ are in **rough alignment** with subject 1.
-
----
-
-### 5.2 Stage II: Within-Iteration Forced Alignment (Hoff-style)
-
-Stage II stabilizes the **entire chain** for each subject, not just the baselines.
-
-Fix a centered baseline $X_{0i}^\star$ for each subject (e.g., its Stage I aligned baseline). At iteration $t$:
-
-1. Center the current draw:
-   $$
-   X_i^{(t)} \leftarrow X_i^{(t)} - \bar x_i^{(t)} \mathbf{1}_n^{\top},
-   \quad
-   \bar x_i^{(t)} = \frac{1}{n}X_i^{(t)}\mathbf{1}_n.
-   $$
-
-2. Compute the Procrustes alignment:
-   $$
-   Q_i^{(t)} = \arg\min_{Q \in \mathcal{O}(r)} \|X_{0i}^\star - Q X_i^{(t)}\|_F.
-   $$
-
-   Again via SVD:
-   $$
-   X_{0i}^\star X_i^{(t)\top} = U_i^{(t)} \Sigma_i^{(t)} V_i^{(t)\top},\qquad
-   Q_i^{(t)} = U_i^{(t)} V_i^{(t)\top}.
-   $$
-
-3. **Update the aligned draw**:
-   $$
-   \widetilde X_i^{(t)} = Q_i^{(t)} X_i^{(t)}.
-   $$
-
-You can treat $\widetilde X_i^{(t)}$ as post-processed samples (for inference and visualization), or **overwrite the chain** in-place by setting $X_i^{(t+1)} \leftarrow \widetilde X_i^{(t)}$.
-
-> **Important:**  
-> - The map $X_i^{(t)} \mapsto \widetilde X_i^{(t)}$ is an isometry, so all pairwise distances and any distance-based likelihood are preserved.  
-> - As a post-processing step, it leaves the posterior unchanged.  
-> - As an in-place update, it preserves the target distribution because the posterior is itself orthogonally symmetric.
-
----
-
-## 6. Shared-Map Alignment in Simulations
-
-For simulations with known ground truth, we can go one step further and estimate a **single global orthogonal map** that aligns all subjects to their true latent positions.
-
-Suppose we have:
-
-- Ground-truth latent positions $X_{\mathrm{true}, i}$ for each subject (already centered and in a common frame),
-- Stage I aligned baselines $R_i X_{0i}$.
-
-We estimate a **shared map** $RR \in \mathcal{O}(r)$ via:
+### 1.2 Non-identifiability
+Let $E(r)$ denote the Euclidean group, consisting of all orthogonal matrices $Q \in \mathcal{O}(r)$ and translation vectors $t \in \mathbb{R}^r$. An isometry $g = (Q, t)$ acts on a configuration $X$ as:
 $$
-RR^\star = \arg\min_{RR \in \mathcal{O}(r)} \sum_{i=1}^p \|X_{\mathrm{true}, i} - RR (R_i X_{0i})\|_F^2.
+g \cdot X = X Q^T + \mathbf{1} t^T
 $$
-
-This again has a closed form:
-
+Since distances are invariant under the action of $E(r)$, the likelihood satisfies:
 $$
-S = \sum_{i=1}^p X_{\mathrm{true}, i} (R_i X_{0i})^{\top}
-= U \operatorname{diag}(\sigma) V^{\top},\qquad
-RR^\star = U V^{\top}.
+L(g \cdot X_i) = L(X_i), \quad \forall g \in E(r)
 $$
-
-- Apply $RR^\star$ to all pre-aligned baselines: $RR^\star (R_i X_{0i})$.
-- This aligns all subjects to their truth **in a single step**.
-
-Under the shared-shape model $X_{\mathrm{true}, i} = O_i T$ and small baseline errors $E_i$, the shared map is **stable**:
-
-> **Shared-map stability (informal).**  
-> Assume $T$ is centered and has full row-rank ($\sigma_r(T) > 0$), and after Stage I:
-> $$
-> R_i X_{0i} = O_i T + E_i.
-> $$
-> Then the shared minimizer $RR^\star$ satisfies
-> $$
-> \frac{1}{p} \sum_{i=1}^p
-> \|X_{\mathrm{true}, i} - RR^\star (R_i X_{0i})\|_F
-> \;\lesssim\; \bar\varepsilon,
-> \quad
-> \bar\varepsilon = \frac{1}{p} \sum_{i=1}^p \|E_i\|_F,
-> $$
-> with constants depending only on $\sigma_r(T)$. If $E_i \equiv 0$, then $RR^\star$ perfectly aligns all subjects (up to a global rotation/reflection).
-
-The proof is a straightforward SVD perturbation argument: compare
-$\sum_i X_{\mathrm{true}, i}(R_i X_{0i})^\top$ to its noiseless version
-$\sum_i O_i T T^\top O_i^\top$ and invoke standard spectral bounds.
+Consequently, the posterior distribution $P(X_i | A_i)$ is not concentrated around a single point $X_i$, but is diffused across the entire equivalence class (or orbit) $[X_i] = \{ g \cdot X_i \mid g \in E(r) \}$. Without intervention, an ergodic MCMC sampler will wander across this orbit, rendering marginal summaries of raw coordinates meaningless.
 
 ---
 
-## 7. Using the Aligned Chain: Nonparametric Cross-Subject Summaries
+## 2. Core Assumption: Approximate Shared Shape
 
-After running Stage II for all iterations:
+Before aligning different subjects, we must establish a theoretical basis for their comparability. Alignment is only statistically valid if the underlying latent structures share a common topology.
 
-- We have aligned draws $\{\widetilde X_i^{(t)}\}_{t, i}$,
-- All subjects live in a **common coordinate system**,
-- Distances and the original likelihood are unchanged.
+> **Assumption 1: Existence of a Common Template**
+> We assume there exists an unknown, centered "true" template configuration $T \in \mathbb{R}^{n \times r}$. For each subject $i$, the latent coordinates $X_i$ are a transformation of this template subject to individual noise:
+> $$
+> X_i = T Q_i^T + \mathbf{1} t_i^T + E_i
+> $$
+> where $Q_i \in \mathcal{O}(r)$ is a subject-specific rotation, $t_i$ is a translation, and $E_i$ represents random perturbations specific to the subject. We assume $\|E_i\|_F$ is small relative to the structural signal.
 
-This enables a host of **nonparametric cross-subject summaries**:
-
-- **Voxel-wise summaries across subjects**
-  - Fréchet means of voxel positions,
-  - Cross-subject variability of voxel locations in latent space.
-- **Pooled clustering**
-  - Cluster voxels using all subjects’ aligned draws,
-  - Or cluster subjects by their latent shapes.
-- **Latent-space centrality and geometry**
-  - Define centrality measures or distances in latent space and compare across subjects.
-- **Downstream regression / correlation**
-  - Regress clinical traits or biomarkers on aligned latent coordinates,
-  - Study how individual variation in latent shape relates to outcomes.
-
-All of this is now well-defined because orientations have been standardized.
+**Statistical Implication:**
+This assumption implies that node $k$ plays a geometrically similar role across all subjects. Under this condition, Procrustes alignment—which minimizes the distance between configurations via isometries—becomes a consistent estimator for the shared structure.
 
 ---
 
-## 8. “What Still Needs Proof?” – Theoretical To-Do List
+## 3. Algorithm: Two-Stage Procrustes Alignment
 
-This note deliberately focuses on the geometry and algorithm. The following are natural theoretical targets:
+To resolve the non-identifiability and isolate the term $E_i$, we employ a two-stage strategy.
 
-1. **Distance / likelihood invariance**  
-   Formal proof that centering and orthogonal maps preserve pairwise distances and thus any distance-based likelihood.
+### Stage I: Group-level Alignment (Establishing the Frame)
+**Goal:** Remove fixed subject-specific rigid body transformations $(Q_i, t_i)$ to establish a unified reference frame.
 
-2. **Stage I Procrustes solution**  
-   Derive the SVD solution $R_i^\star = UV^\top$ via a trace maximization argument.
+1.  **Compute Individual Short-Window Baselines**:
+    Due to the rotational invariance, an MCMC chain will experience slow global rotation (drift) over time. Averaging the entire chain causes samples from different orientations to cancel out, leading to **attenuation** (shrinkage of coordinates toward the origin).
+    
+    Therefore, we define the baseline using a **moderate window** $w$ at the end of the chain:
+    $$
+    \bar{X}_i^{init} = \frac{1}{w} \sum_{t=M-w+1}^M X_i^{(t)}
+    $$
+    This baseline is then centered:
+    $$
+    \bar{X}_i = \bar{X}_i^{init} - \mathbf{1}_n \bar{x}_i^T, \quad \text{where } \bar{x}_i = \frac{1}{n} (\bar{X}_i^{init})^T \mathbf{1}_n
+    $$
 
-3. **Stage II forced alignment**
-   - Show that the Procrustes solution $Q_i^{(t)}$ is the unique orthogonal minimizer (the polar factor).
-   - Prove that applying $Q_i^{(t)}$ as post-processing leaves posterior summaries unchanged.
-   - Prove that in-place updates preserve the target distribution under orthogonal symmetry.
+    > **Technical Note on Window Size $w$:**
+    > * **Too Long:** The chain drifts significantly; averaging induces shape collapse/attenuation.
+    > * **Too Short:** The mean is dominated by high-frequency MCMC noise and lacks stability.
+    > * **Strategy:** Select a window where the Procrustes distance between iterations is stable, typically the last 100-500 iterations depending on mixing speed.
 
-4. **Consistency under shared shape**
-   - Under Assumption (approximate shared shape) with vanishing perturbations,
-   - Show that the combination of Stage I + Stage II (or a generalized Procrustes mean across subjects) consistently recovers the template shape $[T]$, up to a global orthogonal map.
+2.  **Determine Reference Template**:
+    Select a reference configuration $X_{ref}$. This can be the baseline of the first subject ($X_{ref} = \bar{X}_1$) or the consensus mean computed via Generalized Procrustes Analysis (GPA).
 
-These results would turn the alignment procedure from “good practice” into a **well-justified geometric correction** for multi-subject latent position models.
+3.  **Orthogonal Procrustes Transformation**:
+    For each subject $i$, find the optimal orthogonal matrix $R_i^*$ that minimizes the Frobenius norm distance to the reference:
+    $$
+    R_i^* = \arg\min_{R \in \mathcal{O}(r)} \| X_{ref} - \bar{X}_i R^T \|_F
+    $$
+    *Solution via SVD:* Let $X_{ref}^T \bar{X}_i = U \Sigma V^T$. Then $R_i^* = U V^T$.
+
+4.  **Update Baseline**:
+    Set $\hat{X}_i = \bar{X}_i (R_i^*)^T$. All subject baselines are now aligned in a common coordinate system.
 
 ---
 
-## 9. Takeaways
+### Stage II: Within-Chain Alignment (Stabilizing the Trajectory)
+**Goal:** Eliminate random rotational drift within the MCMC process, "pinning" every iteration to the subject's specific aligned baseline.
 
-- Distance-based latent position models are inherently **nonidentifiable up to isometries**.
-- This nonidentifiability is not just a formal annoyance—it actively harms MCMC stability and cross-subject comparability.
-- A simple, fully geometric two-stage Procrustes alignment:
-  1. **Stage I:** Aligns subject baselines to a common reference;
-  2. **Stage II:** Enforces a fixed orientation at every MCMC iteration.
-- Because we only ever apply **isometries**, the original likelihood is untouched, but posterior summaries become **stable, interpretable, and comparable** across subjects.
+At MCMC iteration $t$ for subject $i$:
 
-This is meant as a living **research note**: a practical recipe plus a list of theoretical questions I’d like to clean up. If you find it useful or spot gaps/variants I should consider, feel free to reach out or suggest extensions.
+1.  **Centering**: Remove the translation component:
+    $$
+    X_i^{(t)} \leftarrow X_i^{(t)} - \mathbf{1}(\text{mean}(X_i^{(t)}))
+    $$
+
+2.  **Procrustes Projection**:
+    Align the current draw $X_i^{(t)}$ to the subject's Stage I baseline $\hat{X}_i$. Solve:
+    $$
+    Q^{(t)} = \arg\min_{Q \in \mathcal{O}(r)} \| \hat{X}_i - X_i^{(t)} Q^T \|_F
+    $$
+    (Again, solved via SVD).
+
+3.  **Store Aligned Draw**:
+    $$
+    \tilde{X}_i^{(t)} = X_i^{(t)} (Q^{(t)})^T
+    $$
+
+**Theoretical Justification:**
+The map $X \mapsto X Q^T$ is an isometry. Thus, the pairwise distance matrix of $\tilde{X}_i^{(t)}$ is identical to that of $X_i^{(t)}$, preserving the likelihood $L(\tilde{X}_i^{(t)}) = L(X_i^{(t)})$. Geometrically, this step effectively takes a **cross-section** of the posterior orbit, concentrating the probability mass in a specific orientation to enable summarization.
+
+---
+
+## 4. Post-Alignment Inference
+
+Following this procedure, we obtain a set of aligned posterior samples $\{ \tilde{X}_i^{(t)} \}_{i,t}$ in a unified space. This enables:
+
+1.  **Group-Level Inference**:
+    We can validly compute the global mean latent position:
+    $$
+    X_{group} = \frac{1}{P} \sum_{i=1}^P \left( \frac{1}{M} \sum_{t=1}^M \tilde{X}_i^{(t)} \right)
+    $$
+
+2.  **Heterogeneity Analysis**:
+    The individual deviation term $E_i \approx \hat{X}_i - X_{group}$ now represents true biological or structural variation rather than arbitrary rotation. The magnitude $\|E_i\|_F$ can be regressed against external covariates (e.g., age, clinical status).
+
+3.  **Visualization**:
+    Latent positions from multiple subjects can be superimposed in a single scatter plot to visualize the population-level variance of specific nodes.
+
+## 5. Conclusion
+
+In distance-based latent space models, coordinate arbitrariness is an intrinsic feature, not a bug. However, for comparative analysis, we must fix the gauge. The Procrustes alignment strategy described here is a rigorous method to extract a representative configuration from the quotient space. Its validity rests on the "Approximate Shared Shape" assumption—without which, the superposition of different latent spaces would be geometrically ill-posed.
 
