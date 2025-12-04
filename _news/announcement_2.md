@@ -36,6 +36,23 @@ L(g \cdot X_i) = L(X_i), \quad \forall g \in E(r)
 $$
 Consequently, the posterior distribution $P(X_i | A_i)$ is not concentrated around a single point $X_i$, but is diffused across the entire equivalence class (or orbit) $[X_i] = \{ g \cdot X_i \mid g \in E(r) \}$. Without intervention, an ergodic MCMC sampler will wander across this orbit, rendering marginal summaries of raw coordinates meaningless.
 
+### 1.3 Consequences: The Dual Dilemma of Statistical Inference
+Failure to explicitly account for this geometric invariance renders standard MCMC methods susceptible to two critical statistical issues:
+
+#### (a) Individual Level: MCMC Drift and Diagnostic Failure
+Since the likelihood function remains flat along the entire rotational orbit, the MCMC sampler lacks any incentive to remain fixed in a specific orientation.
+
+* **Drifting**: The sampling chain undergoes a random walk within the parameter space (specifically, along the equivalence orbit). Even if the relative positions (shape) of the latent variables have converged, their absolute coordinate values continue to fluctuate.
+* **Invalid Statistics**: Under these conditions, calculating posterior means or credible intervals for raw coordinates becomes meaningless. For instance, if the chain rotates around the origin, samples from opposing orientations cancel each other out. This causes the mean to shrink toward zero (a form of **mode collapse**), falsely implying that all nodes are clustered at the center.
+* **Diagnostic Difficulty**: Standard convergence diagnostics (such as trace plots or the Gelman-Rubin statistic) will indicate "non-convergence" due to the persistent drift of coordinates, even when the model's internal distance structure has fully stabilized.
+
+#### (b) Group Level: Lack of a Common Baseline for Cross-Subject Comparison
+In multi-subject analyses, the latent space for each subject $i$ is generated independently.
+
+* **Arbitrary Reference Frames**: "Up" for Subject A may correspond to "Left" for Subject B.
+* **Incomparability**: Directly comparing $X_{A, k}$ and $X_{B, k}$ (i.e., the coordinates of the same node across two individuals) is akin to comparing readings from two uncalibrated clocks.
+* **Invalid Group Means**: Without alignment, computing the group average configuration $\frac{1}{p}\sum X_i$ is equivalent to averaging a stack of photographs taken from random angles. The result is merely blurred noise that fails to capture any shared topological structure.
+
 ---
 
 ## 2. Core Assumption: Approximate Shared Shape
@@ -131,7 +148,7 @@ Following this procedure, we obtain a set of aligned posterior samples $\{ \tild
     $$
 
 2.  **Heterogeneity Analysis**:
-    The individual deviation term $E_i \approx \hat{X}_i - X_{group}$ now represents true biological or structural variation rather than arbitrary rotation. The magnitude $\|E_i\|_F$ can be regressed against external covariates (e.g., age, clinical status).
+    The individual deviation term $E_i \approx \hat{X}_i - X_{group}$ now represents true biological or structural variation rather than arbitrary rotation. The magnitude $\| E_i \|_F$ can be regressed against external covariates (e.g., age, clinical status).
 
 3.  **Visualization**:
     Latent positions from multiple subjects can be superimposed in a single scatter plot to visualize the population-level variance of specific nodes.
