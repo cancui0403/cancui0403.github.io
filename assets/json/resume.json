@@ -1,12 +1,11 @@
 {
   "basics": {
     "name": "Can Cui",
-    "label": "Undergraduate Student",
     "image": "",
-    "email": "can.cui@emory.edu",
-    "phone": "(404) 509-2263",
-    "url": "https://alshedivat.github.io/al-folio/",
-    "summary": "A Chinese undergraduate student in Statistics, seeking for a PhD position",
+    "email": "cancui8810@gmail.com",
+    "phone": "+86 15951804044",
+    "github": "https://github.com/cancui0403",
+    "summary": "Undergraduate student in Statistics",
     "location": {
       "address": "2712 Broadway St",
       "postalCode": "CA 94115",
@@ -47,9 +46,9 @@
       "name": "School of Mathematics, Sun Yat-sen University",
       "position": "Research Assistant",
       "url": "https://math.sysu.edu.cn/",
-      "startDate": "2024-08-01",
+      "startDate": "2024-09-01",
       "endDate": "2025-06-30",
-      "summary": "Conducting research on Bayesian modeling under the supervision of Prof. Kai Kang. Our aim is to develop a novel joint model capable of simultaneously analyzing network data and biomarker data.",
+      "summary": "",
       "highlights": ["Network Modeling",
     "Bayesian Methods"]
     }

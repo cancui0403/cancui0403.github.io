@@ -2,7 +2,7 @@
 layout: about
 title: about
 permalink: /
-subtitle: <a href='#'>Sun Yat-sen University</a>. No 135, Xingang West Rd, Guangzhou, China. cancui8810@gmail.com
+subtitle: Sun Yat-sen University | No 135, Xingang West Rd, Guangzhou, China | cancui8810@gmail.com
 
 profile:
   align: right
