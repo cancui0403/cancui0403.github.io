@@ -76,12 +76,12 @@
       "studyType": "B.S.",
       "startDate": "2022-09",
       "endDate": "2026-",
-      "score": "3.99/4.00",
+      "score": "4.00/4.00",
       "courses": ["Mathematical Analysis I, II, III", "Geometry and Algebra I, II", "Functions of Real Variables", 
       "Probabilities", "Mathematical Statistics", "Stochastic Process"]
     }
   ],
-  "awards": [
+  "awards1": [
     {
       "title": "Nobel Prize in Physics",
       "date": "1921-11-01",

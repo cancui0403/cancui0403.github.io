@@ -1,6 +1,6 @@
 ---
 layout: post
-title: An unexpected byproduct of an ongoing project
+title: An Alignment Strategy for Latent Space Model
 date: 2025-04-19 16:11:00-0400
 inline: false
 related_posts: false
@@ -17,7 +17,7 @@ related_posts: false
 
 ## 1. Background: Latent Space + Distance-Based Likelihood
 
-We index **subjects** by $i = 1,\dots,p$ and **nodes/voxels** by $k,\ell \in \{1,\dots,n\}$.
+We index **subjects** by $i = 1,\dots,p$ and **nodes** by $k,\ell \in \{1,\dots,n\}$.
 
 For subject $i$:
 
@@ -40,7 +40,7 @@ $$
 = \frac{\exp(\eta_{ik\ell})}{1+\exp(\eta_{ik\ell})},\qquad
 \eta_{ik\ell} = \alpha_k + \alpha_\ell - d_{ik\ell},
 $$
-with voxel-specific intercepts $\{\alpha_k\}$ (assumed subject-invariant here for simplicity).
+with node-specific intercepts $\{\alpha_k\}$ (assumed subject-invariant here for simplicity).
 
 The key structural property:
 
