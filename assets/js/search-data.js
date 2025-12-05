@@ -562,8 +562,8 @@ ninja.data = [{
             },},{id: "news-the-summer-after-sophomore-year-marked-a-milestone-i-joined-prof-kai-kang-s-group-and-began-my-research-journey-smile",
           title: 'The summer after sophomore year marked a milestone — I joined Prof. Kai...',
           description: "",
-          section: "News",},{id: "news-alignment-strategies-in-latent-space-models-theory-and-algorithms",
-          title: 'Alignment Strategies in Latent Space Models: Theory and Algorithms',
+          section: "News",},{id: "news-an-alignment-strategy-in-latent-space-models",
+          title: 'An Alignment Strategy in Latent Space Models',
           description: "",
           section: "News",handler: () => {
               window.location.href = "/news/announcement_2/";
