@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Alignment Strategies in Latent Space Models: Theory and Algorithms"
+title: "An Alignment Strategy in Latent Space Models"
 date: 2025-04-19 16:11:00-0400
 inline: false
 related_posts: false
