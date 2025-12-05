@@ -7,11 +7,17 @@ related_posts: false
 ---
 
 > **Abstract**
+>
+> **The Problem: Isometric Invariance**
 > Distance-based latent space models possess an inherent invariance to Euclidean isometries (rotations, reflections, translations). This invariance manifests as **non-identifiability** in statistical inference.
 >
-> Practically, this leads to two major issues: (1) **Within-subject instability**, where MCMC chains drift along equivalence orbits, making convergence diagnosis difficult; and (2) **Between-subject incoherence**, where coordinate systems lack a common basis, rendering cross-subject statistics (e.g., group means) invalid.
+> **The Consequences**
+> Practically, this leads to two major issues:
+> 1.  **Within-subject instability:** MCMC chains drift along equivalence orbits, making convergence diagnosis difficult.
+> 2.  **Between-subject incoherence:** Coordinate systems lack a common basis, rendering cross-subject statistics (e.g., group means) invalid.
 >
-> This note details a **Two-Stage Procrustes Alignment Strategy**. Grounded in the assumption of an "Approximate Shared Shape," this method maps all posterior samples into a common coordinate frame via orthogonal transformations. Crucially, this restores comparability without altering the likelihood or the intrinsic geometry of the data.
+> **The Solution: Two-Stage Procrustes Alignment**
+> This note details a strategy grounded in the assumption of an "Approximate Shared Shape." It maps all posterior samples into a common coordinate frame via orthogonal transformations. Moreover, this restores comparability without altering the likelihood or the intrinsic geometry of the data.
 
 ---
 
