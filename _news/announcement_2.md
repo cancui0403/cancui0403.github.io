@@ -141,6 +141,19 @@ At MCMC iteration $t$ for subject $i$:
 **Theoretical Justification:**
 The map $X \mapsto X Q^T$ is an isometry. Thus, the pairwise distance matrix of $\tilde{X}_i^{(t)}$ is identical to that of $X_i^{(t)}$, preserving the likelihood $L(\tilde{X}_i^{(t)}) = L(X_i^{(t)})$. Geometrically, this step effectively takes a **cross-section** of the posterior orbit, concentrating the probability mass in a specific orientation to enable summarization.
 
+<div class="row">
+    <div class="col-sm mt-3 mt-md-0">
+        {% include figure.liquid path="assets/img/space1.png" title="Before Alignment" class="img-fluid rounded z-depth-1" %}
+    </div>
+
+    <div class="col-sm mt-3 mt-md-0">
+        {% include figure.liquid path="assets/img/space2.png" title="After Alignment" class="img-fluid rounded z-depth-1" %}
+    </div>
+</div>
+<div class="caption">
+    Performance of the Alignment Strategy
+</div>
+
 ---
 
 ## 4. Post-Alignment Inference
