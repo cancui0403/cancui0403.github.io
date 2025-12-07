@@ -45,19 +45,15 @@ Consequently, the posterior distribution $P(X_i | A_i)$ is not concentrated arou
 ### 1.3 Consequences: The Dual Dilemma of Statistical Inference
 Failure to explicitly account for this geometric invariance renders standard MCMC methods susceptible to two critical statistical issues:
 
-#### (a) Individual Level: MCMC Drift and Diagnostic Failure
-Since the likelihood function remains flat along the entire rotational orbit, the MCMC sampler lacks any incentive to remain fixed in a specific orientation.
+#### (a) Individual Level: Rotational Drift
+Because the likelihood is flat along the equivalence orbit, the MCMC sampler undergoes a random walk in the orientation space.
+* **The Drift**: Even if the internal shape stabilizes, the absolute coordinates $X^{(t)}$ continuously rotate and translate. 
+* **Diagnostic Failure**: Standard convergence diagnostics (e.g., trace plots) will reject the chain as "non-convergent" due to this drift.
 
-* **Drifting**: The sampling chain undergoes a random walk within the parameter space (specifically, along the equivalence orbit). Even if the relative positions (shape) of the latent variables have converged, their absolute coordinate values continue to fluctuate.
-* **Invalid Statistics**: Under these conditions, calculating posterior means or credible intervals for raw coordinates becomes meaningless. For instance, if the chain rotates around the origin, samples from opposing orientations cancel each other out. This causes the mean to shrink toward zero (a form of **mode collapse**), falsely implying that all nodes are clustered at the center.
-* **Diagnostic Difficulty**: Standard convergence diagnostics (such as trace plots or the Gelman-Rubin statistic) will indicate "non-convergence" due to the persistent drift of coordinates, even when the model's internal distance structure has fully stabilized.
-
-#### (b) Group Level: Lack of a Common Baseline for Cross-Subject Comparison
-In multi-subject analyses, the latent space for each subject $i$ is generated independently.
-
-* **Arbitrary Reference Frames**: "Up" for Subject A may correspond to "Left" for Subject B.
-* **Incomparability**: Directly comparing $X_{A, k}$ and $X_{B, k}$ (i.e., the coordinates of the same node across two individuals) is akin to comparing readings from two uncalibrated clocks.
-* **Invalid Group Means**: Without alignment, computing the group average configuration $\frac{1}{p}\sum X_i$ is equivalent to averaging a stack of photographs taken from random angles. The result is merely blurred noise that fails to capture any shared topological structure.
+#### (b) Group Level: Incomparability and Meaningless Statistics
+Since each subject's latent space is realized in an arbitrary frame, raw coordinates are mathematically incommensurable across subjects.
+* **Incomparability**: Comparing Subject A’s node $k$ to Subject B’s node $k$ is invalid, as they reside in unrelated coordinate systems. 
+* **Meaningless Aggregation**: Standard group-level statistics fail. For example, the naive group mean $\frac{1}{p}\sum X_i$ averages discordant orientations, resulting in a featureless "cloud" rather than a representative template.
 
 ---
 
@@ -143,7 +139,7 @@ The map $X \mapsto X Q^T$ is an isometry. Thus, the pairwise distance matrix of 
 
 <div class="row">
     <div class="col-sm mt-3 mt-md-0">
-        {% include figure.liquid path="assets/img/space2.png" title="Before Alignment" class="img-fluid rounded z-depth-1" %}
+        {% include figure.liquid path="assets/img/space2.jpg" title="Before Alignment" class="img-fluid rounded z-depth-1" %}
     </div>
 
     <div class="col-sm mt-3 mt-md-0">
