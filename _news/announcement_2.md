@@ -176,5 +176,5 @@ Following this procedure, we obtain a set of aligned posterior samples $\{ \tild
 
 ## 5. Conclusion
 
-In distance-based latent space models, coordinate arbitrariness is an intrinsic feature, not a bug. However, for comparative analysis, we must fix the gauge. The Procrustes alignment strategy described here is a rigorous method to extract a representative configuration from the quotient space. Its validity rests on the "Approximate Shared Shape" assumption—without which, the superposition of different latent spaces would be geometrically ill-posed.
+In distance-based latent space models, coordinate arbitrariness is an intrinsic feature, not a bug. However, for comparative analysis, we must fix the gauge. The Procrustes alignment strategy described here is a method to extract a representative configuration. Its validity rests on the "Approximate Shared Shape" assumption—without which, the superposition of different latent spaces would be geometrically ill-posed.
 
