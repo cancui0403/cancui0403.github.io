@@ -9,7 +9,7 @@ related_posts: false
 > **Abstract**
 >
 > **The Problem: Isometric Invariance**
-> Distance-based latent space models possess an inherent invariance to Euclidean isometries (rotations, reflections, translations). This invariance manifests as **non-identifiability** in statistical inference.
+> Distance-based latent space models possess an inherent invariance to Euclidean isometries (rotations, translations). This invariance manifests as **non-identifiability** in statistical inference.
 >
 > **The Consequences**
 > Practically, this leads to two major issues:
@@ -26,10 +26,16 @@ related_posts: false
 ### 1.1 Model Setup
 Consider $p$ subjects, indexed by $i$. For each subject, we model the observed data (e.g., an adjacency matrix $A_i$) using latent coordinates $X_i \in \mathbb{R}^{n \times r}$ for $n$ nodes in an $r$-dimensional Euclidean space.
 
-In distance-based models, the likelihood function $L(X_i; A_i)$ depends solely on the pairwise Euclidean distances between rows:
+In distance-based models, the likelihood function $L(A_i; X_i)$ depends solely on the pairwise Euclidean distances between rows:
 $$
 d_{jk}(X_i) = \| X_{i,j} - X_{i,k} \|_2
 $$
+
+For example, let $A_i$ be a symmetric binary adjacency matrix representing the network topology. We model the marginal probability of a link between node $j$ and node $k$ as:
+$$
+\Pr(A_{i,jk} = 1 \mid X_i) = \frac{\exp(\eta_{ijk})}{1 + \exp(\eta_{ijk})},
+$$
+where the linear predictor is defined as $\eta_{ijk} = \alpha_j + \alpha_k - d_{jk}(X_i)$. Here, $\alpha_j$ accounts for node-specific heterogeneity.
 
 ### 1.2 Non-identifiability
 Let $E(r)$ denote the Euclidean group, consisting of all orthogonal matrices $Q \in \mathcal{O}(r)$ and translation vectors $t \in \mathbb{R}^r$. An isometry $g = (Q, t)$ acts on a configuration $X$ as:
