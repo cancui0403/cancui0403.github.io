@@ -75,7 +75,7 @@ Before aligning different subjects, we must establish a theoretical basis for th
 > where $Q_i \in \mathcal{O}(r)$ is a subject-specific rotation, $t_i$ is a translation, and $E_i$ represents random perturbations specific to the subject. We assume $\|E_i\|_F$ is small relative to the structural signal.
 
 **Statistical Implication:**
-This assumption implies that node $k$ plays a geometrically similar role across all subjects. Under this condition, Procrustes alignment—which minimizes the distance between configurations via isometries—becomes a consistent estimator for the shared structure.
+This assumption implies that node $k$ plays a geometrically similar role across all subjects. Under this condition, Procrustes alignment, which minimizes the distance between configurations via isometries, becomes a consistent estimator for the shared structure.
 
 ---
 
@@ -87,7 +87,7 @@ To resolve the non-identifiability and isolate the term $E_i$, we employ a two-s
 **Goal:** Remove fixed subject-specific rigid body transformations $(Q_i, t_i)$ to establish a unified reference frame.
 
 1.  **Compute Individual Short-Window Baselines**:
-    Due to the rotational invariance, an MCMC chain will experience slow global rotation (drift) over time. Averaging the entire chain causes samples from different orientations to cancel out, leading to **attenuation** (shrinkage of coordinates toward the origin).
+    Due to the rotational invariance, an MCMC chain will experience slow global rotation (drift) over time. Averaging the entire chain causes samples from different orientations to cancel out, leading to attenuation (shrinkage of coordinates toward the origin).
     
     Therefore, we define the baseline using a **moderate window** $w$ at the end of the chain:
     $$
@@ -104,7 +104,7 @@ To resolve the non-identifiability and isolate the term $E_i$, we employ a two-s
     > * **Strategy:** Select a window where the Procrustes distance between iterations is stable, typically the last 100-500 iterations depending on mixing speed.
 
 2.  **Determine Reference Template**:
-    Select a reference configuration $X_{ref}$. This can be the baseline of the first subject ($X_{ref} = \bar{X}_1$) or the consensus mean computed via Generalized Procrustes Analysis (GPA).
+    Select a reference configuration $X_{ref}$. This can be the baseline of the first subject ($X_{ref} = \bar{X}_1$).
 
 3.  **Orthogonal Procrustes Transformation**:
     For each subject $i$, find the optimal orthogonal matrix $R_i^*$ that minimizes the Frobenius norm distance to the reference:
@@ -119,7 +119,7 @@ To resolve the non-identifiability and isolate the term $E_i$, we employ a two-s
 ---
 
 ### Stage II: Within-Chain Alignment (Stabilizing the Trajectory)
-**Goal:** Eliminate random rotational drift within the MCMC process, "pinning" every iteration to the subject's specific aligned baseline.
+**Goal:** Eliminate random rotational drift within the MCMC process, pinning every iteration to the subject's specific aligned baseline.
 
 At MCMC iteration $t$ for subject $i$:
 
@@ -141,7 +141,7 @@ At MCMC iteration $t$ for subject $i$:
     $$
 
 **Theoretical Justification:**
-The map $X \mapsto X Q^T$ is an isometry. Thus, the pairwise distance matrix of $\tilde{X}_i^{(t)}$ is identical to that of $X_i^{(t)}$, preserving the likelihood $L(\tilde{X}_i^{(t)}) = L(X_i^{(t)})$. Geometrically, this step effectively takes a **cross-section** of the posterior orbit, concentrating the probability mass in a specific orientation to enable summarization.
+The map $X \mapsto X Q^T$ is an isometry. Thus, the pairwise distance matrix of $\tilde{X}_i^{(t)}$ is identical to that of $X_i^{(t)}$, preserving the likelihood $L(\tilde{X}_i^{(t)}) = L(X_i^{(t)})$. Geometrically, this step effectively takes a cross-section of the posterior orbit, concentrating the probability mass in a specific orientation to enable summarization.
 
 <div class="row">
     <div class="col-sm mt-3 mt-md-0">
@@ -176,5 +176,5 @@ Following this procedure, we obtain a set of aligned posterior samples $\{ \tild
 
 ## 5. Conclusion
 
-In distance-based latent space models, coordinate arbitrariness is an intrinsic feature, not a bug. However, for comparative analysis, we must fix the gauge. The Procrustes alignment strategy described here is a method to extract a representative configuration. Its validity rests on the "Approximate Shared Shape" assumption—without which, the superposition of different latent spaces would be geometrically ill-posed.
+In distance-based latent space models, coordinate arbitrariness is an intrinsic feature. However, for comparative analysis, we must fix the gauge. The Procrustes alignment strategy described here is a method to extract a representative configuration. Its validity rests on the "Approximate Shared Shape" assumption. Without it the superposition of different latent spaces would be geometrically ill-posed.
 
