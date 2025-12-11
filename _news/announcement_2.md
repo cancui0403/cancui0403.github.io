@@ -35,7 +35,7 @@ For example, let $A_i$ be a symmetric binary adjacency matrix representing the n
 $$
 \Pr(A_{i,jk} = 1 \mid X_i) = \frac{\exp(\eta_{ijk})}{1 + \exp(\eta_{ijk})},
 $$
-where the linear predictor is defined as $\eta_{ijk} = \alpha_j + \alpha_k - d_{jk}(X_i)$. Here, $\alpha_j$ accounts for node-specific heterogeneity.
+where the linear predictor is defined as $\eta_{ijk} = \alpha_j + \alpha_k - d_{jk}(X_i)$. Here, $\alpha_j$ accounts for node-level heterogeneity.
 
 ### 1.2 Non-identifiability
 Let $E(r)$ denote the Euclidean group, consisting of all orthogonal matrices $Q \in \mathcal{O}(r)$ and translation vectors $t \in \mathbb{R}^r$. An isometry $g = (Q, t)$ acts on a configuration $X$ as:
