@@ -37,6 +37,8 @@ $$
 $$
 where the linear predictor is defined as $\eta_{ijk} = \alpha_j + \alpha_k - d_{jk}(X_i)$. Here, $\alpha_j$ accounts for node-level heterogeneity.
 
+The Latent Space Model was introduced by [Hoff, Raftery, and Handcock (2002)](https://www.stat.cmu.edu/~brian/905-2009/all-papers/hoff-raftery-handcock-2002-jasa.pdf) to analyze social networks.
+
 ### 1.2 Non-identifiability
 Let $E(r)$ denote the Euclidean group, consisting of all orthogonal matrices $Q \in \mathcal{O}(r)$ and translation vectors $t \in \mathbb{R}^r$. An isometry $g = (Q, t)$ acts on a configuration $X$ as:
 $$
@@ -58,8 +60,8 @@ Because the likelihood is flat along the equivalence orbit, the MCMC sampler und
 
 #### (b) Group Level: Incomparability and Meaningless Statistics
 Since each subject's latent space is realized in an arbitrary frame, raw coordinates are mathematically incommensurable across subjects.
-* **Incomparability**: Comparing Subject A’s node $k$ to Subject B’s node $k$ is invalid, as they reside in unrelated coordinate systems. 
-* **Meaningless Aggregation**: Standard group-level statistics fail. For example, the naive group mean $\frac{1}{p}\sum X_i$ averages discordant orientations, resulting in a featureless "cloud" rather than a representative template.
+* **Incomparability**: Comparing Subject A’s node $k$ to Subject B’s node $k$ is invalid, as they are in different coordinate systems. 
+* **Meaningless Aggregation**: Standard group-level statistics fail. For example, if we want to study the community structure, which corresponds to clusters in the latent space, we might be interested in the centre of each cluster. Therefore, some summation $\sum_{i \in \text{Group C}} X_i$ could be important. Hovever, since the latent positions of the subjects in some Group C are not in the same coordinate system, the summation is meaningless and uninformative. 
 
 ---
 
@@ -75,7 +77,7 @@ Before aligning different subjects, we must establish a theoretical basis for th
 > where $Q_i \in \mathcal{O}(r)$ is a subject-specific rotation, $t_i$ is a translation, and $E_i$ represents random perturbations specific to the subject. We assume $\|E_i\|_F$ is small relative to the structural signal.
 
 **Statistical Implication:**
-This assumption implies that node $k$ plays a geometrically similar role across all subjects. Under this condition, Procrustes alignment, which minimizes the distance between configurations via isometries, becomes a consistent estimator for the shared structure.
+This assumption implies that node $k$ plays a geometrically similar role across all subjects. Under this condition, Procrustes alignment, which minimizes the distance between configurations via isometries, becomes a consistent estimator for the shared structure. 
 
 ---
 
