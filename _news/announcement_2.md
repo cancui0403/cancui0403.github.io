@@ -113,6 +113,7 @@ To resolve the non-identifiability and isolate the term $E_i$, we employ a two-s
     $$
     R_i^* = \arg\min_{R \in \mathcal{O}(r)} \| X_{ref} - \bar{X}_i R^T \|_F
     $$
+    
     *Solution via SVD:* Let $X_{ref}^T \bar{X}_i = U \Sigma V^T$. Then $R_i^* = U V^T$.
 
 4.  **Update Baseline**:
