@@ -162,16 +162,16 @@ The map $X \mapsto X Q^T$ is an isometry. Thus, the pairwise distance matrix of 
 
 ## 4. Post-Alignment Inference
 
-Following this procedure, we obtain a set of aligned posterior samples $\{ \tilde{X}_i^{(t)} \}_{i,t}$ in a unified space. This enables:
+Following this procedure, we obtain a set of aligned posterior samples $\{ \tilde{X}_i^{(t)} \}_{i,t}$ in a unified space. We use $\hat{X}_i$ to denote the estimate of $X_i$. This enables:
 
 1.  **Group-Level Inference**:
-    We can validly compute the global mean latent position:
+    We can validly compute the group mean latent position:
     $$
-    X_{group} = \frac{1}{P} \sum_{i=1}^P \left( \frac{1}{M} \sum_{t=1}^M \tilde{X}_i^{(t)} \right)
+    X_{\text{Group C}} = \frac{1}{#\{Group C \}} \sum_{\text{Group C}} \hat{X}_i
     $$
 
 2.  **Heterogeneity Analysis**:
-    By stripping away nuisance isometric transformations, the residual term $$E_i \approx \hat{X}_i - X_{\mathrm{group}}$$ isolates genuine structural deviations from the population consensus. The norm $$\|E_i\|_F$$ thus serves as a valid metric of individual variability, enabling regression against external covariates (e.g., age, clinical status) to identify predictors of network abnormality.
+    By stripping away nuisance isometric transformations, the residual term $$E_i \approx \hat{X}_i - X_{\text{Group C}}$$ isolates genuine structural deviations from the population consensus. The norm $$\|E_i\|_F$$ thus serves as a valid metric of individual variability, enabling regression against external covariates (e.g., age, clinical status) to identify predictors of network abnormality.
 
 3.  **Visualization**:
     Latent positions from multiple subjects can be superimposed in a single scatter plot to visualize the population-level variance of specific nodes.
