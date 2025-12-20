@@ -173,8 +173,7 @@ Following this procedure, we obtain a set of aligned posterior samples $\{ \tild
 2.  **Heterogeneity Analysis**:
     By stripping away nuisance isometric transformations, the residual term $$E_i \approx \hat{X}_i - X_{\text{Group C}}$$ isolates genuine structural deviations from the population consensus. The norm $$\|E_i\|_F$$ thus serves as a valid metric of individual variability, enabling regression against external covariates (e.g., age, clinical status) to identify predictors of network abnormality.
 
-3.  **Visualization**:
-    Latent positions from multiple subjects can be superimposed in a single scatter plot to visualize the population-level variance of specific nodes.
+
 
 ## 5. Conclusion
 
