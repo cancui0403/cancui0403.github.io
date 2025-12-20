@@ -113,7 +113,7 @@ To resolve the non-identifiability and isolate the term $E_i$, we employ a two-s
     $$
     R_i^* = \arg\min_{R \in \mathcal{O}(r)} \| X_{ref} - \bar{X}_i R^T \|_F
     $$
-    
+
     *Solution via SVD:* Let $X_{ref}^T \bar{X}_i = U \Sigma V^T$. Then $R_i^* = U V^T$.
 
 4.  **Update Baseline**:
@@ -168,7 +168,7 @@ Following this procedure, we obtain a set of aligned posterior samples $\{ \tild
 1.  **Group-Level Inference**:
     We can validly compute the group mean latent position:
     $$
-    X_{\text{Group C}} = \frac{1}{#\{Group C \}} \sum_{\text{Group C}} \hat{X}_i
+    X_{\text{Group C}} = \frac{1}{\#\{Group C \}} \sum_{\text{Group C}} \hat{X}_i
     $$
 
 2.  **Heterogeneity Analysis**:
