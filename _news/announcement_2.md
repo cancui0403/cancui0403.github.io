@@ -163,7 +163,7 @@ The map $X \mapsto X Q^T$ is an isometry. Thus, the pairwise distance matrix of 
 
 ## 4. Post-Alignment Inference
 
-Following this procedure, we obtain a set of aligned posterior samples $\{ \tilde{X}_i^{(t)} \}_{i,t}$ in a unified space. We use $\hat{X}_i$ to denote the estimate of $X_i$. This enables:
+Following this procedure, we obtain a set of aligned posterior samples $$\{ \tilde{X}_i^{(t)} \}_{i,t}$$ in a unified space. We use $$\hat{X}_i$$ to denote the estimate of $$X_i$$. This enables:
 
 1.  **Group-Level Inference**:
     We can validly compute the group mean latent position:
