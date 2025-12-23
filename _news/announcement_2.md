@@ -51,26 +51,28 @@ Since distances are invariant under the action of $E(r)$, the likelihood satisfi
 $$
 L(g \cdot X_i) = L(X_i), \quad \forall g \in E(r)
 $$
-Consequently, the posterior distribution $P(X_i | A_i)$ is not concentrated around a single point $X_i$, but is diffused across the entire equivalence class (or orbit) $[X_i] = \{ g \cdot X_i \mid g \in E(r) \}$. Without intervention, an ergodic MCMC sampler will wander across this orbit, rendering marginal summaries of raw coordinates meaningless.
+Consequently, the posterior distribution $P(X_i | A_i)$ is not concentrated around a single point $X_i$, but is diffused across the entire equivalence class (or orbit) $[X_i] = \{ g \cdot X_i \mid g \in E(r) \}$. Without intervention, an ergodic MCMC sampler will wander across this orbit.
 
-### 1.3 Consequences: The Dual Dilemma of Statistical Inference
+In other words, for each subject, its network implies a "certain" structured group of nodes in the latent space. The structure that manifests as distances between any two nodes is alomst fixed and is invariant to isometries. 
+
+### 1.3 Consequences
 Failure to explicitly account for this geometric invariance renders standard MCMC methods susceptible to two critical statistical issues:
 
-#### (a) Individual Level: Rotational Drift
-Because the likelihood is flat along the equivalence orbit, the MCMC sampler undergoes a random walk in the orientation space.
-* **The Drift**: Even if the internal shape stabilizes, the absolute coordinates $X^{(t)}$ continuously rotate and translate. 
-* **Diagnostic Failure**: Standard convergence diagnostics (e.g., trace plots) will reject the chain as "non-convergent" due to this drift.
+#### (a) Individual Level: Drift
+Because the likelihood is flat along the equivalence orbit, the MCMC sampler undergoes a random walk in the orientation space. As a result, the chain for each of the subject drifts. Standard convergence diagnostics (e.g., trace plots) will reject the chain as "non-convergent" due to this drift.
 
 #### (b) Group Level: Incomparability and Meaningless Statistics
-Since each subject's latent space is realized in an arbitrary frame, raw coordinates are mathematically incommensurable across subjects.
-* **Incomparability**: Comparing Subject A’s node $k$ to Subject B’s node $k$ is invalid, as they are in different coordinate systems. 
+Since each subject's latent space is realized in an arbitrary frame, raw coordinates are mathematically incommensurable across subjects. 
+
+* **Incomparability**: Comparing Subject A’s node $k$ to Subject B’s node $k$ is invalid, as they are in different coordinate systems. Consider two structured groups of nodes, both of which are drifting in the latent spece. Clearly, they are imcomparable.
+
 * **Meaningless Aggregation**: Standard group-level statistics fail. For example, if we want to study the community structure, which corresponds to clusters in the latent space, we might be interested in the centre of each cluster. Therefore, some summation $\sum_{i \in \text{Group C}} X_i$ could be important. Hovever, since the latent positions of the subjects in some Group C are not in the same coordinate system, the summation is meaningless and uninformative. 
 
 ---
 
 ## 2. Core Assumption: Approximate Shared Shape
 
-Before aligning different subjects, we must establish a theoretical basis for their comparability. Alignment is only statistically valid if the underlying latent structures share a common topology.
+Before aligning different subjects, we must establish a theoretical basis for their comparability. Alignment is only statistically valid if the underlying latent structures share a common topology. If not, the alignment is meanless, and we will not benefit from cross-subject statistics since no common structure is shared.
 
 > **Assumption 1: Existence of a Common Template**
 > We assume there exists an unknown, centered "true" template configuration $T \in \mathbb{R}^{n \times r}$. For each subject $i$, the latent coordinates $X_i$ are a transformation of this template subject to individual noise:
@@ -89,7 +91,7 @@ This assumption implies that node $k$ plays a geometrically similar role across 
 To resolve the non-identifiability and isolate the term $E_i$, we employ a two-stage strategy.
 
 ### Stage I: Group-level Alignment (Establishing the Frame)
-**Goal:** Remove fixed subject-specific rigid body transformations $(Q_i, t_i)$ to establish a unified reference frame.
+**Goal:** Remove fixed subject-specific rigid body transformations $(Q_i, t_i)$ to establish a unified reference frame. For all the structured groups of nodes, we will try to set a universal reference. In this way, the problem of cross-subject incomparability can be solved.
 
 1.  **Compute Individual Short-Window Baselines**:
     Due to the rotational invariance, an MCMC chain will experience slow global rotation (drift) over time. Averaging the entire chain causes samples from different orientations to cancel out, leading to attenuation (shrinkage of coordinates toward the origin).
@@ -125,7 +127,7 @@ To resolve the non-identifiability and isolate the term $E_i$, we employ a two-s
 ---
 
 ### Stage II: Within-Chain Alignment (Stabilizing the Trajectory)
-**Goal:** Eliminate random rotational drift within the MCMC process, pinning every iteration to the subject's specific aligned baseline.
+**Goal:** Eliminate random rotational drift within the MCMC process, pinning every iteration to the subject's specific aligned baseline. This stage is designed to eliminate the within-subject drift in the MCMC chain. The original form of this technique can be found in [Hoff, Raftery, and Handcock (2002)](https://www.stat.cmu.edu/~brian/905-2009/all-papers/hoff-raftery-handcock-2002-jasa.pdf). We extend it to our multi-subject setting.
 
 At MCMC iteration $t$ for subject $i$:
 
@@ -182,4 +184,6 @@ Following this procedure, we obtain a set of aligned posterior samples $$\{ \til
 ## 5. Conclusion
 
 In distance-based latent space models, coordinate arbitrariness is an intrinsic feature. However, for comparative analysis, we must fix the gauge. The Procrustes alignment strategy described here is a method to extract a representative configuration. Its validity rests on the "Approximate Shared Shape" assumption. Without it the superposition of different latent spaces would be geometrically ill-posed.
+
+We have validated the strategy in extensive simulation studies. However, rigorous theoretical proof is still lacking. I hope to fix it after advanced training in statistical theory.
 
