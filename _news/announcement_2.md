@@ -6,10 +6,13 @@ inline: false
 related_posts: false
 ---
 
+During my work on brain functional network with Prof. Kai Kang and Prof. Ben Wu, I met a severe identifiability issue in our initial latent space formulation. Although we did not take that fomulation later, I felt that the process of trying to solve this issue was rewarding. So I decided to record it. 
+
+
 > **Abstract**
 >
 > **The Problem: Isometric Invariance**
-> Distance-based latent space models possess an inherent invariance to Euclidean isometries (rotations, translations). This invariance manifests as **non-identifiability** in statistical inference.
+> Distance-based latent space models possess an inherent invariance to Euclidean isometries (rotations, translations). This invariance manifests as non-identifiability in statistical inference.
 >
 > **The Consequences**
 > Practically, this leads to two major issues:
@@ -21,7 +24,7 @@ related_posts: false
 
 ---
 
-## 1. The Geometric Problem: Isometric Invariance
+## 1. Isometric Invariance
 
 ### 1.1 Model Setup
 Consider $p$ subjects, indexed by $i$. For each subject, we model the observed data (e.g., an adjacency matrix $A_i$) using latent coordinates $X_i \in \mathbb{R}^{n \times r}$ for $n$ nodes in an $r$-dimensional Euclidean space.
